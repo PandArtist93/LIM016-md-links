@@ -1,4 +1,33 @@
 {
-  "name": "md-links",
-  "version": "0.1.0"
+  "name": "LIM016-md-links",
+  "version": "1.0.0",
+  "description": "md-links proyect @ Laboratoria",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "jsdom": "^19.0.0",
+    "markdown-it": "^12.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PandArtist93/LIM016-md-links.git"
+  },
+  "keywords": [
+    "javascript",
+    "node",
+    "npm",
+    "jest"
+  ],
+  "author": "Marielena Aizaga",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PandArtist93/LIM016-md-links/issues"
+  },
+  "homepage": "https://github.com/PandArtist93/LIM016-md-links#readme"
 }

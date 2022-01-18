@@ -3,3 +3,6 @@
 .nyc_output/
 coverage/
 node_modules/
+testFile2/
+testFile.md
+testFile1.md
