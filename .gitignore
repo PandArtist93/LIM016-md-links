@@ -3,6 +3,7 @@
 .nyc_output/
 coverage/
 node_modules/
+bin/index_backup.js
 testFile2/
 testFile.md
 testFile1.md
