@@ -1,46 +1,76 @@
 const fs = require('fs');
-const path = require('path');
+const { argv } = require('process');
 const readline = require('readline');
-const NOMBRE_ARCHIVO = '../testFile1.md';
 const md = require('markdown-it')();
 const jsdom = require('jsdom');
-const { Console } = require('console');
+const { resolve, dirname, extname } = require('path');
+const console = require('console');
 const { JSDOM } = jsdom;
 let dom;
 let result; 
-let pathFile = path.extname(NOMBRE_ARCHIVO);
-let pathDir = path.dirname(NOMBRE_ARCHIVO);
+const nameFile = argv[2];
+const userPath = resolve(process.argv[2]);
+const dirPath = resolve(process.argv[1]);
+const extFile = extname(nameFile);
+const name_dir = dirname(userPath);
+
+
 
 // Leo el archivo para obtener todos los links contenidos ahí 
-fs.readFile(NOMBRE_ARCHIVO, function (err, data) {
-    if (err){
-        console.log('error:', err);        
-    }
-    
-    let lector = readline.createInterface({
-        input: fs.createReadStream(NOMBRE_ARCHIVO)
-    });
-    
-    lector.on("line", linea => {
-        result = md.render(linea);
-        dom = new JSDOM(result);
-        link = dom.window.document.querySelector("a");
-        //text = dom.window.document.querySelector("p");
-        
-        if (link){
-            console.log('text: ', link.textContent);
-            console.log('href: ', link.href);                      
-        } 
-    });
-});
 
-
-// verificando si es un directorio
-if (pathFile == ''){
-    console.log('directory: ', pathDir);
-    console.log('Es un directorio!');                      
-} else{
-    console.log('No es un directorio, es un archivo');
-    console.log('file: ', NOMBRE_ARCHIVO);
-    console.log('ext: ', pathFile); 
+module.exports = readFileMd = (userPath) => {
+    fs.readFile(userPath, function (err, data) {
+        if (err){
+            console.log('error:', err);        
+        }
+        let lector = readline.createInterface({
+            input: fs.createReadStream(userPath)
+        });
+        const pathlinks = [];
+        lector.on("line", linea => {
+            result = md.render(linea);
+            dom = new JSDOM(result);            
+            links = dom.window.document.querySelector("a");
+            
+            if (links){
+                //console.log('text: ', link.textContent);
+                //console.log('URL: ', links.href);
+                pathlinks.push(links.href);
+                console.log('links: ',pathlinks);
+                console.log('tiene:', pathlinks.length, 'links');
+            } else {
+                console.log('el archivo no contiene links');
+            }
+        });
+        return pathlinks    
+    });
 }
+
+readFileMd(userPath);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* // imprimir para verificar process.argv
+console.log(process.argv);
+argv.forEach((val, index) => {
+    console.log(`${index}: ${val}`);    
+}); */
+
+
+

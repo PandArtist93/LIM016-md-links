@@ -1,60 +1,84 @@
 const fs = require('fs');
 const path = require('path');
-//const readline = require("readline");
-const NOMBRE_ARCHIVO = '../testFile2';
-//const md = require('markdown-it')();
-const jsdom = require("jsdom");
-//const { JSDOM } = jsdom;
+const { argv } = require('process');
+const readline = require('readline');
+const md = require('markdown-it')();
+const jsdom = require('jsdom');
+const { isAbsolute, resolve, dirname, basename, parse, extname } = require('path');
+const console = require('console');
+const { Console } = require('console');
+const { JSDOM } = jsdom;
+const {  } = require('./getLinks.js');
+
+const userPath = resolve(process.argv[2]);
+const nameFile = path.basename(userPath);
+const extFile = extname(nameFile);
+const name_dir = dirname(userPath);
 let dom;
 let result;
-let pathFile = path.extname(NOMBRE_ARCHIVO);
-let pathDir = path.dirname(NOMBRE_ARCHIVO);
-
-
-//leyendo un archivo línea a línea y obteniendo todos los links
-
-/* fs.readFile(NOMBRE_ARCHIVO, function (err, data) {
-    if (err){
-        console.log('error:', err);
-    }
-    
-    let lector = readline.createInterface({
-        input: fs.createReadStream(NOMBRE_ARCHIVO)
-    });
-    
-    lector.on("line", linea => {
-        result = md.render(linea);
-        dom = new JSDOM(result);
-        //console.log(result);
-        //console.log(typeof result);
-        console.log('text: ', dom.window.document.querySelector("a").textContent);
-        console.log('href: ', dom.window.document.querySelector("a").href);
-        console.log('file: ', NOMBRE_ARCHIVO);
-        //console.log(dom.window);
-        //console.log("Tenemos una línea:", linea);
-    })
-}); */
 
 //verificando si es un directorio y path
+module.exports = openDirectory = () => {
+    fs.opendir((userPath),(err) => {
+        let path_dir;
+        if (err){
+            console.log('Es un archivo');
+            path_all = err.path;
+            /* console.log('path: ', path_all);
+            console.log('file: ', nameFile);
+            console.log('ext: ', extFile); 
+            console.log('dir: ', name_dir); */
+            
+            readFileMd(path_all);
+        } else {
+            console.log('Es un directorio');
+            directoryPath();
+        }
+    });
+}
 
-fs.opendir((NOMBRE_ARCHIVO),(err, data) => {
-    let path_dir;
-    if (err){
-        console.log('No es un directorio, es un archivo');
-        //console.log('error:', err);
-        path_dir = err.path;
-        console.log('path: ', err.path);
-        console.log('file: ', NOMBRE_ARCHIVO);
-        console.log('ext: ', pathFile); 
-        //console.log(pathDir);
-    } else {
-        console.log('Es un directorio');
-        //console.log('directory: ', pathDir);
-        console.log(typeof data);
-        //console.log(path_dir);
-        console.log(data.read());
-        //console.log(data.kDirPath);
-    }
-    
-});
 
+// verificamos el path ingresado por el usuario 
+const directoryPath = () => {
+    fs.readdir(userPath, (err, data) => {
+        if (err){
+            console.log('hay un error!');
+            console.log(err);            
+        } else{
+            read_directory(data);
+        }
+    })
+}
+
+
+// leemos el directorio
+const read_directory = (data) => {
+    const pathArray = [];
+    let pathSubfile = '';
+    // filtra los archivos que tenga como ext .md
+    data.forEach(data => {
+        const extnameFile = extname(data);
+        const nameFile = basename(data);
+        
+        if (extnameFile === '.md') {
+            pathSubfile = resolve(data);
+            pathArray.push(pathSubfile);                   
+        }else{
+            console.log('no se encuentran archivos .md')
+        }
+    });
+    console.log('archivos .md: ', pathArray.length);
+    //console.log(pathSubfile);
+} 
+
+// verificamos si el path ingresado por el usuario existe 
+const pathVerify = (userPath) => {
+    fs.existsSync(userPath);
+}
+pathVerify(userPath);
+
+// función que busca los archivos con extensión .md
+const searchMdFiles = (path) => {
+    return
+}
+searchMdFiles(userPath);

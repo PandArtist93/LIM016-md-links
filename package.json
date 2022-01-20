@@ -2,15 +2,21 @@
   "name": "LIM016-md-links",
   "version": "1.0.0",
   "description": "md-links proyect @ Laboratoria",
-  "main": "index.js",
+  "main": "bin/index.js",
+  "bin": {
+    "md-links": "./bin/index.js"
+  },
   "directories": {
     "test": "test"
   },
   "dependencies": {
     "jsdom": "^19.0.0",
-    "markdown-it": "^12.3.2"
+    "markdown-it": "^12.3.2",
+    "yargs": "^17.3.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^27.4.7"
+  },
   "scripts": {
     "test": "jest --coverage"
   },
@@ -22,7 +28,8 @@
     "javascript",
     "node",
     "npm",
-    "jest"
+    "jest",
+    "CLI"
   ],
   "author": "Marielena Aizaga",
   "license": "MIT",
