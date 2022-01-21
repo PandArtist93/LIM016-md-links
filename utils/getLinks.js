@@ -3,8 +3,9 @@ const { argv } = require('process');
 const readline = require('readline');
 const md = require('markdown-it')();
 const jsdom = require('jsdom');
-const { resolve, dirname, extname } = require('path');
+const { resolve, dirname, extname, isAbsolute } = require('path');
 const console = require('console');
+const { fileURLToPath } = require('url');
 const { JSDOM } = jsdom;
 let dom;
 let result; 
@@ -18,10 +19,10 @@ const name_dir = dirname(userPath);
 
 // Leo el archivo para obtener todos los links contenidos ahí 
 
-module.exports = readFileMd = (userPath) => {
+/* const readFileMd = (userPath) => {
     fs.readFile(userPath, function (err, data) {
         if (err){
-            console.log('error:', err);        
+            throw err     
         }
         let lector = readline.createInterface({
             input: fs.createReadStream(userPath)
@@ -33,19 +34,59 @@ module.exports = readFileMd = (userPath) => {
             links = dom.window.document.querySelector("a");
             
             if (links){
-                //console.log('text: ', link.textContent);
-                //console.log('URL: ', links.href);
-                pathlinks.push(links.href);
-                console.log('links: ',pathlinks);
+               
+                pathlinks.push({
+                    link: links.href, 
+                    text: (links.textContent).substring(0, 50),
+                    file: resolve(userPath)
+                });
+                
                 console.log('tiene:', pathlinks.length, 'links');
             } else {
                 console.log('el archivo no contiene links');
             }
+            console.log(pathlinks);
         });
+        
+        return pathlinks    
+    });
+} */
+
+const mdFile = extname(userPath) ==='.md';
+const pathAbsolut = isAbsolute(userPath);
+
+
+module.exports = readFileMd = (userPath) => {
+    fs.readFile(userPath, function (err, data) {
+        if (err){
+            throw err     
+        }
+        let lector = readline.createInterface({
+            input: fs.createReadStream(userPath)
+        });
+        const pathlinks = [];
+        lector.on("line", linea => {
+            result = md.render(linea);
+            dom = new JSDOM(result);            
+            links = dom.window.document.querySelector("a");
+            
+            if (links){
+                pathlinks.push({
+                    link: links.href, 
+                    text: (links.textContent).substring(0, 50),
+                    file: resolve(userPath)
+                });
+                
+                console.log('tiene:', pathlinks.length, 'links');
+            } else {
+                console.log('el archivo no contiene links');
+            }
+            console.log(pathlinks);
+        });
+        
         return pathlinks    
     });
 }
-
 readFileMd(userPath);
 
 
@@ -66,11 +107,6 @@ readFileMd(userPath);
 
 
 
-/* // imprimir para verificar process.argv
-console.log(process.argv);
-argv.forEach((val, index) => {
-    console.log(`${index}: ${val}`);    
-}); */
 
 
 

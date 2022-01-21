@@ -1,7 +1,8 @@
 const { argv } = require('process');
 const {  resolve, basename, extname } = require('path');
 const fs = require('fs');
-const { getCompletion } = require('yargs');
+const  searchAllFiles  = require('../src/searchFiles.js');
+const readFileMd = require('../utils/getLinks.js')
 
 module.exports = main = (path, options) => {
     const completePath = absolutePath(path);
@@ -11,7 +12,7 @@ module.exports = main = (path, options) => {
 
 const absolutePath = (inputPath) => {
     if (!inputPath) {
-        console.log("Debes ingresar una ruta valida");
+        console.log("Debes ingresar una ruta valida y opciones válidas");
         process.exit(1);
     }
     const completePath = resolve(inputPath);
@@ -25,11 +26,13 @@ const absolutePath = (inputPath) => {
 
 const processFiles = (completePath) => {
     if (!fs.statSync(completePath).isDirectory()) {
-        console.log("Leeremos el archivo viene en una lista ");
+        readFileMd(completePath);
+        console.log("Leeremos el siguiente archivo");
         return
     }
-    console.log("cremoas  la lista de archivos");
-    console.log('Leemos los archivos');
+    console.log("creamos la lista de archivos");
+    searchAllFiles(completePath);    
+    
 }
 
 
