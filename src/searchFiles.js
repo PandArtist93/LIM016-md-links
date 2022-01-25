@@ -1,36 +1,15 @@
 const fs = require('fs');
 const argv = require('process');
-const extname = require('path');
 const console = require('console');
 const { join, resolve, normalize } = require('path');
 const path = require('path');
 const userPath = process.argv[2];
-//const readFileMd = require ('../utils/getLinks.js')
+const readFileMd = require ('../utils/getLinks.js');
+const fetch = require('node-fetch');
+const { builtinModules } = require('module');
 
-/* module.exports = searchAllFiles = (userPath) => {
-    fs.readdir(userPath, (err, files) => {
-        if (err){
-            throw err;
-        }
-        //console.log(files);   
-        
-        files.forEach(file => {
-            const ext = extname(file);
-            const pathFile = userPath + '\\' + file;
-            const arrayFileContent = [];
-            fs.readFile(pathFile, 'UTF-8', (err, contentFile) => {
-                if (err){
-                    throw err;
-                }  
-                arrayFileContent.push(contentFile);  
-                console.log(file);        
-                console.log(arrayFileContent);  
-            })
-        });   
-    })
-} */
 
-module.exports = searchAllFiles = (userPath) => {
+const searchAllFiles = (userPath) => {
     if(!fs.statSync(userPath).isDirectory()) {
         return userPath
     }
@@ -45,17 +24,66 @@ module.exports = searchAllFiles = (userPath) => {
         else {
             arrayContainerAllFiles.push(pathFile);
         }    
-    });    
+    }); 
+   
     return arrayContainerAllFiles;
-    /* let arrayContainerAllFilesMd = [];
-    let tempArray = '';
-    arrayContainerAllFiles.forEach(file => {
-        tempArray = readFileMd(file);
-        arrayContainerAllFilesMd.push(tempArray);
+} 
+
+const filterMdFiles = (pathFiles) => {
+    let arrayFilesMd = [];
+    pathFiles.forEach(file => {
+        const ext = path.extname(file);
+        if (ext == '.md') {
+            arrayFilesMd.push(file);                      
+        }   
     })
-    return arrayContainerAllFilesMd; */
+    return arrayFilesMd;
+}
+
+const readAllFileMd = (pathFiles) => {
+    
+    const promises = []
+    pathFiles.forEach(pathFile => {
+        promises.push(readFileMd(pathFile));
+        /* readFileMd(path).then(links => {
+            console.log("Links");
+            console.log(links)
+        }) */
+        //arrayLinks = arrayLinks.concat(readFileMd(path));
+    })
+    Promise.all(promises).then( data => {
+        console.log(data.flat()); // para agrupar en un solo array los demas arrays internos
+    })   
+}
+
+const searchLink = (link) => {
+    return new Promise(function(resolve, reject){
+        //console.log(link.link);
+        fetch(link.link)
+        .then(response => {
+            
+            link.status = response.status;
+            //console.log(link.status);
+            if (response.status == 200 || response.status == 201 || response.status == 204) {
+                link.message = 'ok';
+            }           
+            else if (response.status == 400 || response.status == 401 || response.status == 404) {
+                link.message = 'fail';
+            }
+            resolve(link);
+
+        }).catch((response) => {
+            console.log('entro en el catch');
+            link.status = response.status;
+            console.log(response);
+            link.message = 'fail';
+            reject(link);
+        })
+    });    
 }
 
 
-const result = searchAllFiles(userPath);
-console.log(result);
+module.exports.searchAllFiles = searchAllFiles;
+module.exports.filterMdFiles = filterMdFiles;
+module.exports.readAllFileMd = readAllFileMd;
+module.exports.searchLink = searchLink;
