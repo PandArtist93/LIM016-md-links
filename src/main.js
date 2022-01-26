@@ -1,6 +1,7 @@
 const { resolve, extname} = require('path');
 const fs = require('fs');
 const {searchAllFiles, filterMdFiles, readAllFileMd, validateLink } = require('../src/searchFiles.js');
+const totalLinks = require('../src/options.js');
 const readFileMd = require('../utils/getLinks.js')
 const path = require('path');
 
@@ -64,8 +65,12 @@ const absolutePath = (inputPath) => {
 const processFiles = (completePath, options) => {
    
     if (!fs.statSync(completePath).isDirectory()) {
-        console.log("Leeremos el archivo ingresado");  
+        //console.log("Leeremos el archivo ingresado");  
         const ext = path.extname(completePath);
+        let totalLinks = [];
+        let uniqueLinks = [];
+        let duplicateLinks = [];
+        let brokenLinks = [];
         if (ext == '.md') {
             readFileMd(completePath).then(data =>{
                 if (options.validate == true && options.stats == false){
@@ -78,10 +83,23 @@ const processFiles = (completePath, options) => {
                     });
                 }
                 else if (options.validate == false && options.stats == true){
-                    console.log('deberia arrojar las estadisticas de los links');
+                    //console.log('deberia arrojar las estadisticas de los links');
+                    data.forEach(link => {                        
+                        totalLinks.push(link.href);
+                    })
+                    console.log('Links Totales: ', totalLinks.length); 
+                    console.log('Links unicos: ', new Set (totalLinks).size);             
                 }
                 else if (options.validate == true && options.stats == true){
-                    console.log('deberia arrojar las respuestas de las validaciones y las estadísticas de los links');
+                    //console.log('deberia arrojar las respuestas de las validaciones y las estadísticas de los links');
+                    data.forEach(link => {                        
+                        totalLinks.push(link.href);
+                    })                    
+                    brokenLinks.push(totalLinks.filter((link) => link.status >= 400))
+                    console.log('Links Totales: ', totalLinks.length); 
+                    console.log('Links Rotos: ', brokenLinks.length);  
+                    console.log('Links unicos: ', new Set (totalLinks).size);
+                    console.log('Links repetidos: ', totalLinks.length - new Set (totalLinks).size);
                 }     
                 else{
                     readFileMd(completePath).then((data)=> {
@@ -94,7 +112,7 @@ const processFiles = (completePath, options) => {
             return
         }
         else{
-            console.log('no se puede leer el archivo porque no es Markdown');
+            console.log('No se puede leer el archivo porque no es Markdown');
         }
         return
     }

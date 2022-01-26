@@ -1,12 +1,10 @@
 const fs = require('fs');
-const argv = require('process');
 const console = require('console');
 const { join, resolve, normalize } = require('path');
 const path = require('path');
 const userPath = process.argv[2];
 const readFileMd = require ('../utils/getLinks.js');
 const fetch = require('node-fetch');
-const { builtinModules } = require('module');
 
 
 const searchAllFiles = (userPath) => {
@@ -56,7 +54,7 @@ const readAllFileMd = (pathFiles) => {
 const validateLink = (link) => {
     return new Promise(function(resolve, reject){
         //console.log(link.link);
-        fetch(link.link)
+        fetch(link.href)
         .then(response => {            
             link.status = response.status;            
             if (response.status >= 200 && response.status <= 399) {

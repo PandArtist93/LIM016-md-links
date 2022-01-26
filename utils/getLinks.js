@@ -35,7 +35,7 @@ module.exports = readFileMd = (userPath) => {
                 links = dom.window.document.querySelectorAll("a");        
                 links.forEach(link => {
                     totalLinks.push({
-                        link: link.href, 
+                        href: link.href, 
                         text: (link.textContent).substring(0, 50),
                         file: path.resolve(userPath)
                     });
@@ -47,37 +47,6 @@ module.exports = readFileMd = (userPath) => {
     }); 
 }
 
-
-/* module.exports = readFileMd = (userPath) => {
-    return new Promise(function(resolve, reject){
-        const ext = path.extname(userPath);
-        if (ext == '.md') {
-            fs.readFile(userPath, 'utf8', (err, data) => {
-                if (err) {
-                    //console.log(err);
-                    reject(err);
-                } 
-                else {
-                    result = md.render(data);
-                    dom = new JSDOM(result);
-                    let totalLinks = [];
-                    links = dom.window.document.querySelectorAll("a");        
-                    links.forEach(link => {
-                        totalLinks.push({
-                            link: link.href, 
-                            text: (link.textContent).substring(0, 50),
-                            file: path.resolve(userPath)
-                        });
-                    });
-                    resolve(totalLinks);
-                }
-            
-            }); 
-        }
-        console.log('no se puede leer el archivo porque no es Markdown');        
-    }); 
-}
- */
 
 
 
