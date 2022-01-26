@@ -6,9 +6,8 @@ const md = require('markdown-it')();
 const jsdom = require('jsdom');
 const { isAbsolute, resolve, dirname, basename, parse, extname } = require('path');
 const console = require('console');
-const { Console } = require('console');
 const { JSDOM } = jsdom;
-const {  } = require('./getLinks.js');
+const { readDirectory } = require('../src/searchFiles.js');
 
 const userPath = resolve(process.argv[2]);
 const nameFile = path.basename(userPath);
@@ -19,35 +18,42 @@ let result;
 
 //verificando si es un directorio y path
 module.exports = openDirectory = () => {
-    fs.opendir((userPath),(err) => {
-        let path_dir;
+    //let test = directoryPath(userPath);
+    readDirectory(userPath);
+    //console.log(test);
+    /* fs.opendir((userPath),(err, dir) => {
+        let files = [];
         if (err){
             console.log('Es un archivo');
             path_all = err.path;
-            /* console.log('path: ', path_all);
-            console.log('file: ', nameFile);
-            console.log('ext: ', extFile); 
-            console.log('dir: ', name_dir); */
-            
-            readFileMd(path_all);
+            readFileMd(userPath);
         } else {
-            console.log('Es un directorio');
+            
+            console.log(files);
             directoryPath();
         }
-    });
+    }); */
 }
 
 
 // verificamos el path ingresado por el usuario 
-const directoryPath = () => {
+const directoryPath = (userPath) => {
+    console.log(userPath);
+    let test = '';
     fs.readdir(userPath, (err, data) => {
+        console.log('estoy here');
         if (err){
             console.log('hay un error!');
+            console.log('enrta aca?');
             console.log(err);            
         } else{
-            read_directory(data);
+            test = data;
+            console.log('paso?');
+            read_directory(test);
         }
-    })
+        return pathArray
+    });
+    
 }
 
 
@@ -55,30 +61,22 @@ const directoryPath = () => {
 const read_directory = (data) => {
     const pathArray = [];
     let pathSubfile = '';
+    let file = '';
     // filtra los archivos que tenga como ext .md
     data.forEach(data => {
         const extnameFile = extname(data);
-        const nameFile = basename(data);
         
         if (extnameFile === '.md') {
             pathSubfile = resolve(data);
-            pathArray.push(pathSubfile);                   
-        }else{
-            console.log('no se encuentran archivos .md')
+            file = userPath + '\\' + data;
+            pathArray.push(file); 
+            //console.log(pathSubfile);                
         }
     });
     console.log('archivos .md: ', pathArray.length);
-    //console.log(pathSubfile);
+    console.log(pathArray);
+    return pathArray
 } 
 
-// verificamos si el path ingresado por el usuario existe 
-const pathVerify = (userPath) => {
-    fs.existsSync(userPath);
-}
-pathVerify(userPath);
 
-// función que busca los archivos con extensión .md
-const searchMdFiles = (path) => {
-    return
-}
-searchMdFiles(userPath);
+openDirectory();
