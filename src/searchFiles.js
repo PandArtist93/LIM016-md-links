@@ -57,23 +57,19 @@ const validateLink = (link) => {
     return new Promise(function(resolve, reject){
         //console.log(link.link);
         fetch(link.link)
-        .then(response => {
-            
-            link.status = response.status;
-            //console.log(link.status);
-            if (response.status == 200 || response.status == 201 || response.status == 204) {
-                link.message = 'ok';
+        .then(response => {            
+            link.status = response.status;            
+            if (response.status >= 200 && response.status <= 399) {
+                link.ok = 'ok';
             }           
-            else if (response.status == 400 || response.status == 401 || response.status == 404) {
-                link.message = 'fail';
+            else{
+                link.ok = 'FAIL';
             }
             resolve(link);
-
         }).catch((response) => {
-            console.log('entro en el catch');
             link.status = response.status;
             console.log(response);
-            link.message = 'fail';
+            link.ok = 'FAIL';
             reject(link);
         })
     });    
@@ -84,3 +80,4 @@ module.exports.searchAllFiles = searchAllFiles;
 module.exports.filterMdFiles = filterMdFiles;
 module.exports.readAllFileMd = readAllFileMd;
 module.exports.validateLink = validateLink;
+

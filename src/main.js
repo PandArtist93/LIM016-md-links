@@ -1,8 +1,8 @@
-const { resolve, basename, extname } = require('path');
+const { resolve, extname} = require('path');
 const fs = require('fs');
 const {searchAllFiles, filterMdFiles, readAllFileMd, validateLink } = require('../src/searchFiles.js');
 const readFileMd = require('../utils/getLinks.js')
-
+const path = require('path');
 
 module.exports = main = (path, options) => {
     const completePath = absolutePath(path);    
@@ -24,7 +24,7 @@ const absolutePath = (inputPath) => {
     return completePath
 }
 
-const processFiles = (completePath, options) => {
+/* const processFiles = (completePath, options) => {
    
     if (!fs.statSync(completePath).isDirectory()) {
         console.log("Leeremos el archivo ingresado");  
@@ -59,6 +59,48 @@ const processFiles = (completePath, options) => {
     const pathFilesMD = filterMdFiles(pathFiles);
     readAllFileMd(pathFilesMD);
     
+}*/
+
+const processFiles = (completePath, options) => {
+   
+    if (!fs.statSync(completePath).isDirectory()) {
+        console.log("Leeremos el archivo ingresado");  
+        const ext = path.extname(completePath);
+        if (ext == '.md') {
+            readFileMd(completePath).then(data =>{
+                if (options.validate == true && options.stats == false){
+                    data.forEach(link => {
+                        validateLink(link).then((data)=> {
+                            console.log(data);
+                        }).catch((data) => {
+                            console.log(data);
+                        })
+                    });
+                }
+                else if (options.validate == false && options.stats == true){
+                    console.log('deberia arrojar las estadisticas de los links');
+                }
+                else if (options.validate == true && options.stats == true){
+                    console.log('deberia arrojar las respuestas de las validaciones y las estadísticas de los links');
+                }     
+                else{
+                    readFileMd(completePath).then((data)=> {
+                        console.log(data);
+                    }).catch((data) => {
+                        console.log(data);
+                    });
+                }      
+            })
+            return
+        }
+        else{
+            console.log('no se puede leer el archivo porque no es Markdown');
+        }
+        return
+    }
+    console.log("buscamos todos los archivos .md contenidos en este directorio");
+    const pathFiles = searchAllFiles(completePath);   
+    const pathFilesMD = filterMdFiles(pathFiles);
+    readAllFileMd(pathFilesMD);
+    
 }
-
-
