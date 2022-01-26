@@ -44,19 +44,16 @@ const readAllFileMd = (pathFiles) => {
     
     const promises = []
     pathFiles.forEach(pathFile => {
-        promises.push(readFileMd(pathFile));
-        /* readFileMd(path).then(links => {
-            console.log("Links");
-            console.log(links)
-        }) */
-        //arrayLinks = arrayLinks.concat(readFileMd(path));
+        promises.push(readFileMd(pathFile));       
     })
     Promise.all(promises).then( data => {
         console.log(data.flat()); // para agrupar en un solo array los demas arrays internos
+        
     })   
 }
 
-const searchLink = (link) => {
+
+const validateLink = (link) => {
     return new Promise(function(resolve, reject){
         //console.log(link.link);
         fetch(link.link)
@@ -86,4 +83,4 @@ const searchLink = (link) => {
 module.exports.searchAllFiles = searchAllFiles;
 module.exports.filterMdFiles = filterMdFiles;
 module.exports.readAllFileMd = readAllFileMd;
-module.exports.searchLink = searchLink;
+module.exports.validateLink = validateLink;
