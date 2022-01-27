@@ -59,13 +59,13 @@ const linkStats = (promises) => {
     let totalLinks = [];
     let uniqueLinks = [];
     promises.then( data => {
-        const arrayWithAllPromises = data.flat();                        
+        const arrayWithAllPromises = data.flat();  
         arrayWithAllPromises.forEach(link => {
             totalLinks.push(link.href);
         })
         uniqueLinks = new Set (totalLinks).size;
-        console.log('Links Totales: ', totalLinks.length); 
-        console.log('Links unicos: ', uniqueLinks);  
+        console.log('Links Totales: ', totalLinks.length);
+        console.log('Links unicos: ', uniqueLinks);
     })        
 }
 
@@ -74,14 +74,17 @@ const statsAndValidateLinks = (promises) => {
     let uniqueLinks = [];
     let duplicateLinks = [];
     let brokenLinks = [];
+    let arrayBrokenLinks =[];
     promises.then( data => {
-        const arrayWithAllPromises = data.flat();                        
+        const arrayWithAllPromises = data.flat();                      
         arrayWithAllPromises.forEach(link => {
             totalLinks.push(link.href);
-        })            
-        brokenLinks.push(totalLinks.filter((link) => link.status >= 400))
+            totalLinks.push(link.status === 404);
+        })
+        console.log(totalLinks);
+        brokenLinks.push(totalLinks.filter(link => link.status === 404));
         uniqueLinks = new Set (totalLinks).size;
-        duplicateLinks = totalLinks.length - new Set (totalLinks).size;
+        duplicateLinks = totalLinks.length - uniqueLinks;
         console.log('Links Totales: ', totalLinks.length); 
         console.log('Links Rotos: ', brokenLinks.length);  
         console.log('Links unicos: ', uniqueLinks);
@@ -91,7 +94,7 @@ const statsAndValidateLinks = (promises) => {
 
 // process Options functions
 const processOptions = (promisesFiles, options) => {
-    switch (options) {
+    switch (options.options) {
         case (options.validate == true && options.stats == false):
             linksValidated(promisesFiles);
         break;
