@@ -1,17 +1,15 @@
-const { resolve, basename, extname } = require('path');
+const { resolve } = require('path');
 const fs = require('fs');
-const {searchAllFiles, filterMdFiles, readAllFileMd, validateLink } = require('../src/searchFiles.js');
-const readFileMd = require('../utils/getLinks.js')
+const { searchAllFiles, filterMdFiles, readAllFileMd } = require('../src/searchFiles.js');
+const { linksValidated, linkStats, statsAndValidateLinks } = require('../src/options.js');
 
-
-module.exports = main = (path, options) => {
+const main = (path, options) => {
     const completePath = absolutePath(path);    
     processFiles(completePath, options);    
 }
 
-
 const absolutePath = (inputPath) => {
-    if (!inputPath) {
+    if (inputPath == undefined) {
         console.log("Debes ingresar una ruta valida y opciones válidas");
         process.exit(1);
     }
@@ -25,40 +23,24 @@ const absolutePath = (inputPath) => {
 }
 
 const processFiles = (completePath, options) => {
-   
-    if (!fs.statSync(completePath).isDirectory()) {
-        console.log("Leeremos el archivo ingresado");  
-        readFileMd(completePath).then(data =>{
-            if (options.validate == true && options.stats == false){
-                data.forEach(link => {
-                    validateLink(link).then((data)=> {
-                        console.log(data);
-                    }).catch((data) => {
-                        console.log(data);
-                    })
-                });
-            }
-            else if (options.validate == false && options.stats == true){
-                console.log('deberia arrojar las estadisticas de los links');
-            }
-            else if (options.validate == true && options.stats == true){
-                console.log('deberia arrojar las respuestas de las validaciones y las estadísticas de los links');
-            }     
-            else{
-                readFileMd(completePath).then((data)=> {
-                    console.log(data);
-                }).catch((data) => {
-                    console.log(data);
-                });
-            }      
-        })
-        return
+    const pathFiles = searchAllFiles(completePath);  // nos retorna un arreglo con los path
+    const pathFilesMD = filterMdFiles(pathFiles); // nos retorna un arreglo con paths que tienen como ext (.md)
+    const promisesFiles = readAllFileMd(pathFilesMD);  // lee y extrae los links contenido en cada uno de los archivos para retornarlos en un arreglo 
+    //processOptions(completePath, options);  
+    if (options.validate == true && options.stats == false){
+        linksValidated(promisesFiles);      
     }
-    console.log("buscamos todos los archivos .md contenidos en este directorio");
-    const pathFiles = searchAllFiles(completePath);   
-    const pathFilesMD = filterMdFiles(pathFiles);
-    readAllFileMd(pathFilesMD);
-    
+    else if (options.validate == false && options.stats == true){
+        linkStats(promisesFiles);              
+    }
+    else if (options.validate == true && options.stats == true){
+        statsAndValidateLinks(promisesFiles);           
+    }
+    else{
+        promisesFiles.then( data => {
+            console.log(data.flat());
+        })
+    }
 }
 
-
+module.exports.main = main;

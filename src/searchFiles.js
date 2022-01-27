@@ -1,17 +1,17 @@
 const fs = require('fs');
-const argv = require('process');
-const console = require('console');
 const { join, resolve, normalize } = require('path');
 const path = require('path');
-const userPath = process.argv[2];
-const readFileMd = require ('../utils/getLinks.js');
-const fetch = require('node-fetch');
-const { builtinModules } = require('module');
+const md = require('markdown-it')();
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+let dom;
+let result; 
+let links;
 
-
+//search all files includes that into a directory or subdirectory and return a array with them
 const searchAllFiles = (userPath) => {
     if(!fs.statSync(userPath).isDirectory()) {
-        return userPath
+        return [userPath]
     }
     let arrayContainerAllFiles = [];
     const readDirectorySync = fs.readdirSync(userPath);
@@ -25,10 +25,10 @@ const searchAllFiles = (userPath) => {
             arrayContainerAllFiles.push(pathFile);
         }    
     }); 
-   
     return arrayContainerAllFiles;
 } 
 
+// filter the files for your type of extencion (.md) and return a array with them 
 const filterMdFiles = (pathFiles) => {
     let arrayFilesMd = [];
     pathFiles.forEach(file => {
@@ -40,47 +40,40 @@ const filterMdFiles = (pathFiles) => {
     return arrayFilesMd;
 }
 
+// read each file and extract the includes links, to return an object with them into a array
+const readFileMd = (userPath) => {
+    return new Promise(function(resolve, reject){
+        fs.readFile(userPath, 'utf8', (err, data) => {
+            if (err) {                
+                reject(err);
+            } 
+            else {
+                result = md.render(data);
+                dom = new JSDOM(result);
+                let totalLinks = [];
+                links = dom.window.document.querySelectorAll("a");        
+                links.forEach(link => {
+                    totalLinks.push({
+                        href: link.href, 
+                        text: (link.textContent).substring(0, 50),
+                        file: path.resolve(userPath)
+                    });
+                });
+                resolve(totalLinks);
+            }
+        }); 
+    }); 
+}
+
+// wait for all the promises to be fulfilled, to return a unique promise with all them
 const readAllFileMd = (pathFiles) => {
-    
-    const promises = []
+    const promises = [];
     pathFiles.forEach(pathFile => {
         promises.push(readFileMd(pathFile));       
     })
-    Promise.all(promises).then( data => {
-        console.log(data.flat()); // para agrupar en un solo array los demas arrays internos
-        
-    })   
+    return Promise.all(promises)// to join all the promises in one
 }
-
-
-const validateLink = (link) => {
-    return new Promise(function(resolve, reject){
-        //console.log(link.link);
-        fetch(link.link)
-        .then(response => {
-            
-            link.status = response.status;
-            //console.log(link.status);
-            if (response.status == 200 || response.status == 201 || response.status == 204) {
-                link.message = 'ok';
-            }           
-            else if (response.status == 400 || response.status == 401 || response.status == 404) {
-                link.message = 'fail';
-            }
-            resolve(link);
-
-        }).catch((response) => {
-            console.log('entro en el catch');
-            link.status = response.status;
-            console.log(response);
-            link.message = 'fail';
-            reject(link);
-        })
-    });    
-}
-
 
 module.exports.searchAllFiles = searchAllFiles;
 module.exports.filterMdFiles = filterMdFiles;
 module.exports.readAllFileMd = readAllFileMd;
-module.exports.validateLink = validateLink;

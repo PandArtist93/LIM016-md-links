@@ -1,5 +1,5 @@
 const { argv } = require('process');
-//const { option } = require('yargs');
+
 // Helper functions 
 
 const setOptions = (option, options) => {
@@ -10,22 +10,19 @@ const setOptions = (option, options) => {
         const result = validOptions.includes(pseudoOption)
         if (pseudoOption == 'v' || pseudoOption == 'validate') {
             options['validate'] = true
-            
         } 
         else if (pseudoOption == 's' || pseudoOption == 'stats') {
             options['stats'] = true
-            
-        }
+        }       
         else {
-            console.log("Invalid arguments")
+            console.log('opción invalida');
             process.exit(1);
         }
     }
     return options;
 }
 
-
-module.exports = parseOptionalArguments = () => {
+const parseOptionalArguments = () => {
     let options = {
         validate: false,
         stats: false
@@ -39,3 +36,5 @@ module.exports = parseOptionalArguments = () => {
     //console.log(options);
     return options
 }
+
+module.exports.parseOptionalArguments = parseOptionalArguments;
