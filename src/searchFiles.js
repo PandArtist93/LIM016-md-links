@@ -46,7 +46,7 @@ const readFileMd = (userPath) => {
     return new Promise(function(resolve, reject){
         fs.readFile(userPath, 'utf8', (err, data) => {
             if (err) {                
-                reject(err);
+                reject (console.log('err'));
             } 
             else {
                 result = md.render(data);
@@ -78,4 +78,5 @@ const readAllFileMd = (pathFiles) => {
 
 module.exports.searchAllFiles = searchAllFiles;
 module.exports.filterMdFiles = filterMdFiles;
+module.exports.readFileMd = readFileMd;
 module.exports.readAllFileMd = readAllFileMd;

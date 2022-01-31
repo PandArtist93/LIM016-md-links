@@ -32,3 +32,5 @@ const processFiles = (completePath, options) => {
 }
 
 module.exports.main = main;
+module.exports.absolutePath = absolutePath;
+module.exports.processFiles = processFiles;
