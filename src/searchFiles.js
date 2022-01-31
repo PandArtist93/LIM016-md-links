@@ -46,7 +46,7 @@ const readFileMd = (userPath) => {
     return new Promise(function(resolve, reject){
         fs.readFile(userPath, 'utf8', (err, data) => {
             if (err) {                
-                reject (console.log('err'));
+                reject (err);
             } 
             else {
                 result = md.render(data);

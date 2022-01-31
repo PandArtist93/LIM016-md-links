@@ -71,13 +71,6 @@ const arrayObj1 = [
   }
 ]
 
-const err = {
-  "code": "ENOENT",
-  "errno": -4058,
-  "path": "C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFile1.md\\file1.md",
-  "syscall": "open",
-};
-
 describe('verify searchAllFiles', () => {
 
   it('is a function', () => {
@@ -114,11 +107,11 @@ describe('verify readFileMd', () => {
   it('if the input is a pathFile with ext .md, return a array with objects', () => {
     return expect(readFileMd(pathFileAbsolute)).resolves.toEqual(arrayObj1);
   });
- /*  it('if the input is a pathFile with ext .md, return a array with objects', () => {
-    return expect(readFileMd(pathFileWrong)).rejects.toBe('err');
-  }); */
+  it('if the input is a pathFile with ext .md and this is wrong, return the error', () => {
+    return expect(readFileMd(pathFileWrong)).rejects.toThrow();
+  });
   it('if the input is a pathFile with ext .md without links, return a array emty', () => {
-    return expect(readFileMd(pathFileAbsoluteWithoutlinks)).resolves.toEqual([]);
+    return expect(readFileMd(pathFileAbsoluteWithoutlinks)).resolves.toBeO;
   });
 
 });
