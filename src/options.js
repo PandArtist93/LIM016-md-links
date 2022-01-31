@@ -1,4 +1,3 @@
-const console = require('console');
 const fetch = require('node-fetch');
 
 // validate functions
@@ -45,48 +44,37 @@ const linksValidated = (promises) => {
     });
 }
 
-// stats functions
-const totalLinks = (arrayPromises) => {
-    let totalLinks = [];
-    const arrayWithAllPromises = arrayPromises.flat();       // revisar                 
-    arrayWithAllPromises.forEach(link => {
-        totalLinks.push(link.href);
-    })
-    return totalLinks
+const allLinks = (arrayLinks) => {
+    return arrayLinks.map( (linkObj) => { return linkObj.href })
 }
 
-const linkStats = (promises) => {
-    let totalLinks = [];
-    let uniqueLinks = [];
+const searchBrokenLinks = (arrayLinks) => {
+    return arrayLinks.filter( linkObj =>  linkObj.status >= 404 ).length
+}
+
+const searchUniqueLinks = (links) => {
+    return new Set (links).size
+}
+
+const linkStats = (promises) => {    
     promises.then( data => {
-        const arrayWithAllPromises = data.flat();  
-        arrayWithAllPromises.forEach(link => {
-            totalLinks.push(link.href);
-        })
-        uniqueLinks = new Set (totalLinks).size;
-        console.log('Links Totales: ', totalLinks.length);
+        data = data.flat();
+        const links = allLinks(data);       
+        const uniqueLinks = searchUniqueLinks(links);
+        console.log('Links Totales: ', links.length);
         console.log('Links unicos: ', uniqueLinks);
     })        
 }
 
 const statsAndValidateLinks = (promises) => {
-    let totalLinks = [];
-    let uniqueLinks = [];
-    let duplicateLinks = [];
-    let brokenLinks = [];
-    let arrayBrokenLinks =[];
     promises.then( data => {
-        const arrayWithAllPromises = data.flat();                      
-        arrayWithAllPromises.forEach(link => {
-            totalLinks.push(link.href);
-            totalLinks.push(link.status === 404);
-        })
-        console.log(totalLinks);
-        brokenLinks.push(totalLinks.filter(link => link.status === 404));
-        uniqueLinks = new Set (totalLinks).size;
-        duplicateLinks = totalLinks.length - uniqueLinks;
-        console.log('Links Totales: ', totalLinks.length); 
-        console.log('Links Rotos: ', brokenLinks.length);  
+        data = data.flat();
+        const links = allLinks(data);
+        const brokenLinks = searchBrokenLinks(data);
+        const uniqueLinks = searchUniqueLinks(links);
+        const duplicateLinks = links.length - uniqueLinks;
+        console.log('Links Totales: ', links.length); 
+        console.log('Links Rotos: ', brokenLinks);  
         console.log('Links unicos: ', uniqueLinks);
         console.log('Links repetidos: ', duplicateLinks);
     })      
@@ -94,23 +82,22 @@ const statsAndValidateLinks = (promises) => {
 
 // process Options functions
 const processOptions = (promisesFiles, options) => {
-    switch (options.options) {
-        case (options.validate == true && options.stats == false):
-            linksValidated(promisesFiles);
-        break;
-        case (options.validate == false && options.stats == true):
-            linkStats(promisesFiles);
-        break;
-        case (options.validate == true && options.stats == true):
-            statsAndValidateLinks(promisesFiles);
-        break;
-        default:
-            promisesFiles.then( data => {
-                console.log(data.flat());
-            })
-        break;
+    if (options.validate == true && options.stats == false){
+        linksValidated(promisesFiles);      
+    }
+    else if (options.validate == false && options.stats == true){
+        linkStats(promisesFiles);              
+    }
+    else if (options.validate == true && options.stats == true){
+        statsAndValidateLinks(validateAllLinks(promisesFiles));           
+    }
+    else{
+        promisesFiles.then( data => {
+            console.log(data.flat());
+        })
     }
 }
 module.exports.linkStats = linkStats;
 module.exports.linksValidated = linksValidated;
 module.exports.statsAndValidateLinks = statsAndValidateLinks;
+module.exports.processOptions = processOptions;
