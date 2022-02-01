@@ -2,12 +2,12 @@
 
 const { argv } = require('process');
 //const { console } = require('console');
-const { main } = require('../src/main.js');
+const { mdLinks } = require('../src/mdLinks.js');
 const { parseOptionalArguments } = require('../src/utils.js');
 const figlet = require('figlet');
 const chalk = require('chalk');
 
-const mdLinks = () => {
+const main = () => {
   figlet("Welcome to Md-Links!", function (err, data) {
     if (err) {
       console.log("something is wrong...");
@@ -16,9 +16,16 @@ const mdLinks = () => {
     } 
     console.log(chalk.red(data));   
   });
+
   const inputPath = argv[2];
   const options = parseOptionalArguments();
-  main(inputPath, options);
+
+  mdLinks(inputPath, options).then((objectLinks) => {
+    console.log('probando la promesa de mdLinks');
+    console.log(objectLinks.flat());
+  }).catch(err => {
+    reject(err)
+  });
 };
 
-mdLinks();
+main();

@@ -1,4 +1,4 @@
-const { absolutePath, processFiles } = require('../src/main.js'); 
+const { absolutePath, processFiles } = require('../src/mdLinks.js'); 
 const pathFileWrong = 'data/testFolder1/file8.pdf';
 const pathUndefine = undefined;
 const pathDirectory = 'data/testFolder1';

@@ -97,16 +97,6 @@ describe('verify validateAllLinks', () => {
   
 });
 
-describe('verify linksValidated', () => {
-
-  it('is a function', () => {
-    expect(typeof linksValidated).toBe('function');
-  });
-  /* it('is a function', () => {
-    expect(linksValidated()).resolves.toBe('function');
-  }); */
-});
-
 describe('verify allLinks', () => {
 
   it('is a function', () => {
