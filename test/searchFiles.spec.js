@@ -111,7 +111,7 @@ describe('verify readFileMd', () => {
     return expect(readFileMd(pathFileWrong)).rejects.toThrow();
   });
   it('if the input is a pathFile with ext .md without links, return a array emty', () => {
-    return expect(readFileMd(pathFileAbsoluteWithoutlinks)).resolves.toBeO;
+    return expect(readFileMd(pathFileAbsoluteWithoutlinks)).resolves.toEqual([]);
   });
 
 });

@@ -63,7 +63,7 @@ const linkStats = (promises) => {
         const uniqueLinks = searchUniqueLinks(links);
         console.log('Links Totales: ', links.length);
         console.log('Links unicos: ', uniqueLinks);
-    })        
+    })       
 }
 
 const statsAndValidateLinks = (promises) => {

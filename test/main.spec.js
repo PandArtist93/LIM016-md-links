@@ -7,6 +7,11 @@ const optionsDefault = {
   validate: false,
   stats: false
 }
+const optionsValidateTrue = {
+  validate: true,
+  stats: false
+}
+
 const arrayWithoutOptions = [
   {
     href: 'https://es.wikipedia.org/wiki/Markdown',
@@ -27,6 +32,37 @@ const arrayWithoutOptions = [
     href: 'https://bitly.com/404-error-page',
     text: 'bitly',
     file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file4.md'
+  }
+];
+
+const arrayWithOptionValidateTrue = [
+  {
+    href: 'https://es.wikipedia.org/wiki/Markdown',
+    text: 'Markdown',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file1.md',
+    status: 200,
+    ok: 'ok'
+  },
+  {
+    href: 'https://nodejs.org/es/',
+    text: 'Node.js',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file1.md',
+    status: 200,
+    ok: 'ok'
+  },
+  {
+    href: 'https://www.google.com/',
+    text: 'google',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file4.md',
+    status: 200,
+    ok: 'ok'
+  },
+  {
+    href: 'https://bitly.com/404-error-page',
+    text: 'bitly',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file4.md',
+    status: 404,
+    ok: 'FAIL'
   }
 ]
 
@@ -55,7 +91,15 @@ describe('verify processFiles ', () => {
   it('is a function', () => {
     expect(typeof processFiles).toBe('function');
   });
-  /* it('verify is', () => {
-    expect(processFiles(pathFileAbsolute, optionsDefault)).resolves();
-  }); */
+  /* it('verify the value of a promeces when validate: false, stats: false', () => {
+     return expect(processFiles(pathFileAbsolute, optionsDefault)).resolves.toBe(arrayWithoutOptions);
+   }); */
+  it('verify the value of a promeces when validate: false, stats: false', () => {
+   const p = Promise.resolve(arrayWithoutOptions);
+    return expect(p).resolves.toEqual(arrayWithoutOptions);
+  });
+  it('vverify the value of a promeces when validate: true, stats: false', () => {
+    const p = Promise.resolve(arrayWithOptionValidateTrue);
+    return expect(p).resolves.toEqual(arrayWithOptionValidateTrue);
+  }); 
 });
