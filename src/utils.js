@@ -1,5 +1,6 @@
 const { argv } = require('process');
 const process = require('process');
+const chalk = require('chalk');
 //const { console } = require('console');
 
 // Helper functions 
@@ -14,7 +15,7 @@ const setOptions = (option, options) => {
             options['stats'] = true
         }       
         else {
-            console.log('invalid Options');
+            console.log(chalk.bold.red('invalid Options'));
             process.exit(1);
         }
     }
@@ -32,7 +33,6 @@ const parseOptionalArguments = () => {
    
     options = setOptions(option1, options);
     options = setOptions(option2, options);
-    //console.log(options);
     return options
 }
 

@@ -4,7 +4,6 @@ const path = require('path');
 const md = require('markdown-it')();
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
-// const chalk = require('chalk');
 let dom;
 let result; 
 let links;
@@ -60,7 +59,6 @@ const readFileMd = (userPath) => {
                         file: path.resolve(userPath)
                     });
                 });
-                //resolve (chalk.blue(totalLinks));
                 resolve (totalLinks);
             }
         }); 

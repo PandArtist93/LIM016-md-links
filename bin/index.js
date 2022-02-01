@@ -21,7 +21,6 @@ const main = () => {
   const options = parseOptionalArguments();
 
   mdLinks(inputPath, options).then((objectLinks) => {
-    //console.log('probando la promesa de mdLinks');
     formatOutput(objectLinks.flat(), options);
   }).catch(err => {
     console.log(err);
@@ -29,15 +28,17 @@ const main = () => {
 };
 
 const formatOutput = (linkObjects, options) => {
-  if (options.stats){
-    const objStats = linkObjects[0];
-    const keys = Object.keys(objStats);
-    keys.forEach(key => {
-      console.log(`${key}: ${objStats[key]}`);
+  if (options.stats && options.validate){   
+    linkObjects.forEach(obj => {
+      console.log(`${chalk.bgGreen.bold('Totales :')} ${chalk.greenBright(obj['allLinks'])} ${chalk.bgRed.bold('Rotos :')} ${chalk.redBright(obj['brokenLinks'])} ${chalk.bgBlue.bold('Unicos :')} ${chalk.blueBright(obj['uniqueLinks'])} ${chalk.bgMagenta.bold('Repetidos :')} ${chalk.magentaBright(obj['duplicateLinks'])} `)
     });
-   /*  linkObjects.forEach(obj => {
-      console.log(`${chalk.bgGreen.bold('Totales :')} ${chalk.greenBright(obj['allLinks'])}  ${chalk.bgBlue.bold('Rotos :')} ${chalk.blueBright(obj['brokenLinks'])} ${chalk.bgRed.bold('Unicos :')} ${chalk.redBright(obj['uniqueLinks'])} ${chalk.bgMagenta.bold('Repetidos :')} ${chalk.magentaBright(obj['duplicateLinks'])} `)
-    }); */
+    //console.log(linkObjects);
+  }
+  else if (options.stats) {
+    linkObjects.forEach(obj => {
+      console.log(`${chalk.bgGreen.bold('Totales :')} ${chalk.greenBright(obj['allLinks'])} ${chalk.bgRed.bold('Unicos :')} ${chalk.redBright(obj['uniqueLinks'])} `)
+    });
+    //console.log(linkObjects);
   }
   else if (options.validate) {
     linkObjects.forEach(obj => {
