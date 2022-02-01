@@ -1,13 +1,16 @@
 const { 
   validateLinkResp, 
-  validateAllLinks, 
-  linksValidated, 
+  validateAllLinks,
   allLinks, 
   searchBrokenLinks, 
   searchUniqueLinks, 
   linkStats, 
   statsAndValidateLinks 
 } = require('../src/options.js');
+
+const {
+  readAllFileMd,
+} = require('../src/searchFiles.js')
 
 const arrayObj = [
   {
@@ -72,6 +75,29 @@ const arrayObjWithoutBrokendLinks = [
        
 ];
 
+const arrayDefault = [
+  {
+    href: 'https://es.wikipedia.org/wiki/Markdown',
+    text: 'Markdown',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file1.md'
+  },
+  {
+    href: 'https://nodejs.org/es/',
+    text: 'Node.js',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file1.md'
+  },
+  {
+    href: 'https://www.google.com/',
+    text: 'google',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file4.md'
+  },
+  {
+    href: 'https://bitly.com/404-error-page',
+    text: 'bitly',
+    file: 'C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file4.md'
+  }
+];
+
 const arrayLinks = [
   'https://es.wikipedia.org/wiki/Markdown',
   'https://nodejs.org/es/',
@@ -80,7 +106,16 @@ const arrayLinks = [
 ];
 
 const arrayEnty = [];
-  
+
+const arrayFilesMd = [
+  "C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file1.md",
+  "C:\\Users\\maiza\\Desktop\\Laboratoria\\4to_Proyecto\\LIM016-md-links\\data\\testFolder1\\file4.md"
+]
+
+const arrayLinkStats = [ { allLinks: 4, uniqueLinks: 4 } ];
+
+const arrayLinkStatsAndValidate = [ { allLinks: 4, brokenLinks: 1, uniqueLinks: 4, duplicateLinks: 0 } ];
+
 describe('verify validateLinkResp', () => {
 
   it('is a function', () => {
@@ -150,13 +185,24 @@ describe('verify linkStats', () => {
   it('is a function', () => {
     expect(typeof linkStats).toBe('function');
   });
-  
+  it('verify the result of method', () => {
+    const inputArg = readAllFileMd(arrayFilesMd);
+    return expect(linkStats(inputArg)).resolves.toEqual(arrayLinkStats);
+  });
+  it('verify the result of method', () => {
+    return expect(linkStats(inputArg)).resjects.toEqual(err);
+  });
 });
 
 describe('verify statsAndValidateLinks', () => {
 
   it('is a function', () => {
-    expect(typeof statsAndValidateLinks).toBe('function');
+    return expect(typeof statsAndValidateLinks).toBe('function');
+  });
+  it('verify the result of method ', () => {
+    const inputArg = readAllFileMd(arrayFilesMd);
+    const inputArgs = validateAllLinks(inputArg);
+    return expect(statsAndValidateLinks(inputArgs)).resolves.toEqual(arrayLinkStatsAndValidate);
   });
   
 });

@@ -51,7 +51,7 @@ const searchUniqueLinks = (links) => {
 
 const linkStats = (promises) => {  
     return new Promise(function(resolve, reject){
-        promises.then( data => {
+        promises.then(data => {
             data = data.flat();
             const links = allLinks(data);       
             const uniqueLinks = searchUniqueLinks(links);
@@ -68,7 +68,7 @@ const linkStats = (promises) => {
 
 const statsAndValidateLinks = (promises) => {
     return new Promise(function(resolve, reject){
-        promises.then( data => {
+        promises.then(data => {
             data = data.flat();
             const links = allLinks(data);
             const brokenLinks = searchBrokenLinks(data);
