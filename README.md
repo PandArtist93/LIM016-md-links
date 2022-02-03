@@ -27,7 +27,7 @@ md-links es un librería que facilita la búsqueda y validación de links conten
 Instalar la libreria por medio de la terminal :
 
 ```
-npm install PandArtist93/md-links
+npm install PandArtist93/LIM016-md-links
 ```
 
 ## 3. Guía de uso 🔧
@@ -42,9 +42,9 @@ Las rutas implementadas pueden ser absolutas o relativas.
 
 Entre las opciones que puede ingresar el usuario se encuentran: 
 
-- --validate/ -validate/ -v / -V : 
+- --validate/ -validate/ -v / -V 
 
-- --stats/ -stats/ -s / -S:
+- --stats/ -stats/ -s / -S
 
 - --stats --validate/ -stats -validate/ -s -v/ -S -V / (y las respectivas combinaciones).
 
@@ -162,6 +162,7 @@ El siguiente proyecto tuvo una duración de 4 semanas, durante el cual se implem
 ## 5. Keywords 🔑
 
 * javascript
+* Mardown
 * node
 * npm
 * jest
@@ -173,6 +174,8 @@ El siguiente proyecto tuvo una duración de 4 semanas, durante el cual se implem
 
 😊 **Marielena Aizaga** - [PandArtist93](https://github.com/PandArtist93)
 
+***
 
+## 7. Repositorio original con las condiciones del proyecto🔗
 
-
+ **Laboratoria** - [Laboratoria/LIM016-md-links](https://github.com/Laboratoria/LIM016-md-links) 💛
