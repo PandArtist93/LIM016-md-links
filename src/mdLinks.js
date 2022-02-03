@@ -2,12 +2,14 @@ const { resolve } = require('path');
 const chalk = require('chalk');
 const fs = require('fs');
 const process = require('process');
-const { searchAllFiles, filterMdFiles, readAllFileMd } = require('../src/searchFiles.js');
-const { processOptions } = require('../src/options.js');
+const { searchAllFiles, filterMdFiles, readAllFileMd } = require('./searchFiles.js');
+const { processOptions } = require('./options.js');
 
-const main = (path, options) => {
-    const completePath = absolutePath(path);   
-    processFiles(completePath, options);    
+const mdLinks= (path, options) => {
+    return new Promise(function(resolve, reject){
+        const completePath = absolutePath(path);   
+        resolve(processFiles(completePath, options));   
+    });    
 }
 
 const absolutePath = (inputPath) => {
@@ -28,7 +30,9 @@ const processFiles = (completePath, options) => {
     const pathFiles = searchAllFiles(completePath);  // nos retorna un arreglo con los path
     const pathFilesMD = filterMdFiles(pathFiles); // nos retorna un arreglo con paths que tienen como ext (.md)
     const promisesFiles = readAllFileMd(pathFilesMD);  // lee y extrae los links contenido en cada uno de los archivos para retornarlos en un arreglo 
-    processOptions(promisesFiles, options);  
+    return processOptions(promisesFiles, options);
 }
 
-module.exports.main = main;
+module.exports.mdLinks = mdLinks;
+module.exports.absolutePath = absolutePath;
+module.exports.processFiles = processFiles;

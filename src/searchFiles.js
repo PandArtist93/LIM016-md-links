@@ -4,7 +4,6 @@ const path = require('path');
 const md = require('markdown-it')();
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
-// const chalk = require('chalk');
 let dom;
 let result; 
 let links;
@@ -46,7 +45,7 @@ const readFileMd = (userPath) => {
     return new Promise(function(resolve, reject){
         fs.readFile(userPath, 'utf8', (err, data) => {
             if (err) {                
-                reject(err);
+                reject (err);
             } 
             else {
                 result = md.render(data);
@@ -60,7 +59,6 @@ const readFileMd = (userPath) => {
                         file: path.resolve(userPath)
                     });
                 });
-                //resolve (chalk.blue(totalLinks));
                 resolve (totalLinks);
             }
         }); 
@@ -78,4 +76,5 @@ const readAllFileMd = (pathFiles) => {
 
 module.exports.searchAllFiles = searchAllFiles;
 module.exports.filterMdFiles = filterMdFiles;
+module.exports.readFileMd = readFileMd;
 module.exports.readAllFileMd = readAllFileMd;

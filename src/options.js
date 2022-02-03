@@ -36,13 +36,6 @@ const validateAllLinks = (promises) => {
     })
 }
 
-const linksValidated = (promises) => {
-    validateAllLinks(promises).then((data) => {
-        console.log(data);
-    }).catch(err => {
-        console.log(err);
-    });
-}
 
 const allLinks = (arrayLinks) => {
     return arrayLinks.map( (linkObj) => { return linkObj.href })
@@ -56,48 +49,64 @@ const searchUniqueLinks = (links) => {
     return new Set (links).size
 }
 
-const linkStats = (promises) => {    
-    promises.then( data => {
-        data = data.flat();
-        const links = allLinks(data);       
-        const uniqueLinks = searchUniqueLinks(links);
-        console.log('Links Totales: ', links.length);
-        console.log('Links unicos: ', uniqueLinks);
-    })        
+const linkStats = (promises) => {  
+    return new Promise(function(resolve, reject){
+        promises.then(data => {
+            data = data.flat();
+            const links = allLinks(data);       
+            const uniqueLinks = searchUniqueLinks(links);
+            const outputFormat = {
+                allLinks: links.length, 
+                uniqueLinks: uniqueLinks
+            }
+            resolve([outputFormat])
+        }).catch(err => {
+            reject(err)
+        });      
+    });   
 }
 
 const statsAndValidateLinks = (promises) => {
-    promises.then( data => {
-        data = data.flat();
-        const links = allLinks(data);
-        const brokenLinks = searchBrokenLinks(data);
-        const uniqueLinks = searchUniqueLinks(links);
-        const duplicateLinks = links.length - uniqueLinks;
-        console.log('Links Totales: ', links.length); 
-        console.log('Links Rotos: ', brokenLinks);  
-        console.log('Links unicos: ', uniqueLinks);
-        console.log('Links repetidos: ', duplicateLinks);
-    })      
+    return new Promise(function(resolve, reject){
+        promises.then(data => {
+            data = data.flat();
+            const links = allLinks(data);
+            const brokenLinks = searchBrokenLinks(data);
+            const uniqueLinks = searchUniqueLinks(links);
+            const duplicateLinks = links.length - uniqueLinks;
+            const outputFormats = {
+                allLinks: links.length, 
+                brokenLinks: brokenLinks,
+                uniqueLinks: uniqueLinks,
+                duplicateLinks: duplicateLinks
+            }
+            resolve([outputFormats])
+        }).catch(err => {
+            reject(err) 
+        });   
+    });    
 }
 
 // process Options functions
 const processOptions = (promisesFiles, options) => {
     if (options.validate == true && options.stats == false){
-        linksValidated(promisesFiles);      
+        return validateAllLinks(promisesFiles);      
     }
     else if (options.validate == false && options.stats == true){
-        linkStats(promisesFiles);              
+        return linkStats(promisesFiles);              
     }
     else if (options.validate == true && options.stats == true){
-        statsAndValidateLinks(validateAllLinks(promisesFiles));           
+        return statsAndValidateLinks(validateAllLinks(promisesFiles));           
     }
     else{
-        promisesFiles.then( data => {
-            console.log(data.flat());
-        })
+        return promisesFiles;
     }
 }
 module.exports.linkStats = linkStats;
-module.exports.linksValidated = linksValidated;
 module.exports.statsAndValidateLinks = statsAndValidateLinks;
 module.exports.processOptions = processOptions;
+module.exports.validateLinkResp = validateLinkResp;
+module.exports.validateAllLinks = validateAllLinks;
+module.exports.allLinks = allLinks;
+module.exports.searchBrokenLinks = searchBrokenLinks;
+module.exports.searchUniqueLinks = searchUniqueLinks;
