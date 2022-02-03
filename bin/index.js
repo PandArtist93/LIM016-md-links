@@ -8,14 +8,14 @@ const figlet = require('figlet');
 const chalk = require('chalk');
 
 const main = () => {
-  figlet("Welcome to Md-Links!", function (err, data) {
-    if (err) {
-      console.log("something is wrong...");
-      console.dir(err);
-      return;
-    } 
-    console.log(chalk.bold.magentaBright(data));   
+  const message =figlet.textSync("Welcome to Md-Links!", {
+    horizontalLayout: 'default',
+    verticalLayout: 'default',
+    width: 110,
+    whitespaceBreak: true  
+      
   });
+  console.log(chalk.bold.magentaBright(message));   
 
   const inputPath = argv[2];
   const options = parseOptionalArguments();
