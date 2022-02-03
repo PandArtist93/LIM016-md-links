@@ -15,7 +15,7 @@ const setOptions = (option, options) => {
             options['stats'] = true
         }       
         else {
-            console.log(chalk.bold.red('invalid Options'));
+            console.log(chalk.bold.red('Opción Invalida'));
             process.exit(1);
         }
     }
