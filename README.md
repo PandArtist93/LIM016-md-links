@@ -134,8 +134,8 @@ El siguiente proyecto tuvo una duración de 4 semanas, durante el cual se implem
 
 <details><summary>Herramientas de planificación</summary><p>
 
-  * [Trello]()
-  * [Github Projects]()
+  * [Trello](https://trello.com/b/6oF4957T/md-links)
+  <!-- * [Github Projects]() -->
 </p></details>
 
 
@@ -144,12 +144,12 @@ El siguiente proyecto tuvo una duración de 4 semanas, durante el cual se implem
 * API
   <details><summary>Flujo del API</summary><p>
 
-    * [Diagrama-API]()
+    * [Diagrama-API](https://app.diagrams.net/?libs=general;flowchart&src=about#G1Ykaf9cwz5BsF1aZRcu-mp26_sUqZertM)
   </p></details>
 * CLI
   <details><summary>Flujo del CLI</summary><p>
 
-    * [Diagrama-CLI]()
+    * [Diagrama-CLI](https://app.diagrams.net/?src=about#G1Ouz5aGjitsn5Bc7XkFAr0oLJ9L44N82I)
   </p></details>
 
 <details><summary>Flujo completo del proyecto</summary><p>
